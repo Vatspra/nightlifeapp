@@ -1,0 +1,23 @@
+{
+  "name": "jsweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "bcryptjs": "*",
+    "body-parser": "^1.18.2",
+    "cors": "*",
+    "ejs": "^2.5.7",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "mongoose": "^5.0.10",
+    "passport": "*",
+    "passport-jwt": "*"
+  },
+  "author": "prashant",
+  "license": "ISC"
+}
