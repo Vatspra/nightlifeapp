@@ -10,11 +10,10 @@ var UserSchema = mongoose.Schema({
   name:{
     type:String
   },
-  email:{
-    type:String,
-    required:true
-  },
   username:{
+    type:String
+  },
+  email:{
     type:String,
     required:true
   },
@@ -67,7 +66,7 @@ module.exports.getUserById = function(id,callback){
 }
 
 module.exports.getUserByUsername = function(username,callback){
-  var query = {username:username}
+  var query = {email:username}
  User.findOne(query,callback);
 }
 
@@ -80,7 +79,8 @@ module.exports.comparePassword = function(pwd,hash,callback){
 }
 
 module.exports.addUser = function(newUser,callback){
-   console.log("hi");
+   //console.log("hi");
+
      bcrypt.hash(newUser.password, saltRounds, function(err, hash) {
        if(err){
          console.log(err);

@@ -2,47 +2,32 @@
 
 var app = angular.module('myApp',["ngRoute"]).run(function($rootScope) {
   $rootScope.dhaba =[];
+  $rootScope.authenticated =false;
   });
-app.config(function($routeProvider) {
+app.config(function($routeProvider){
     $routeProvider
-    .when("/", {
+    .when("/",{
         templateUrl : "main.html",
         controller : "mainController"
-    })
-
+     })
+     .when("/login",{
+         templateUrl : "login.html",
+         controller : "loginController"
+      })
+      .when("/register",{
+          templateUrl : "register.html",
+          controller : "loginController"
+       })
 })
+var cityname ="";
 app.controller('mainController',function($scope,$http,$location,$rootScope){
-  //console.log($rootScope.dhaba)
-  //$scope.dhaba =[];
   $scope.city ="";
-
-
-  /*$http({
-    method: 'GET',
-    url: 'https://developers.zomato.com/api/v2.1/search?entity_type=city&q=chandigarh',
-    headers: {
-        'user-key':'7613be427d3a3363e21a01fdf0e72198',
-        'Accept': 'application/json'
-    }
-}).then(function(response){
-
-  var x =response.data.restaurants
-  for(var i =0;i<x.length;i++){
-
-    a.name = x[i].restaurant.name;
-    a.img =x[i].restaurant.thumb;
-    $rootScope.dhaba.push(a);
-    a = {name:"",img:""};
-  }
-  //alert(response.data.restaurants[0].restaurant.name);
- })*/
-
- $scope.search = function(){
+  $scope.search = function(){
+    cityname = $scope.city;
+    alert(cityname);
   $rootScope.dhaba =[];
-  console.log($rootScope.dhaba)
-  //$scope.city ="";
-  var a = {name:"",img:"",add:""};
-  alert($scope.city)
+  var rest =[];
+  var a = {name:"",img:"",count:0};
   var url ='https://developers.zomato.com/api/v2.1/search?entity_type=city&q='+$scope.city;
   $http({
     method: 'GET',
@@ -53,26 +38,47 @@ app.controller('mainController',function($scope,$http,$location,$rootScope){
     }
 }).then(function(response){
   //alert("i m going to respond")
-  var x =response.data.restaurants
+  var x =response.data.restaurants;
+  //var arr =[];
   for(var i =0;i<x.length;i++){
-
     a.name = x[i].restaurant.name;
     a.img =x[i].restaurant.thumb;
-  //  a.add =x[i].restaurant.location.address;
-    if(a.name!=""&&a.img!=""){
-      $rootScope.dhaba.push(a);
-    }
-
-    a={name:"",img:"",add:""};
+    if(a.name!=""&&a.img!="" ){
+       rest.push(a);
+     }
+    a={name:"",img:"",count:0};
   }
-  console.log($rootScope.dhaba)
-  $location.path('/');
-  //alert(response.data.restaurants[0].restaurant.name);
- })
- console.log($rootScope.dhaba);
- console.log(url);
+  var restuDetail ={city :$scope.city,restaurant:rest}
+  $http.post('/users/addrestaurant', restuDetail).then(function(data){
+    $rootScope.dhaba =data.data.restaurant;
+
+    console.log(data);
+
+   })
+  })
 
  }
+ $scope.going = function(element) {
+      $scope.a = element.currentTarget.value;
+      for(var i =0;i<$rootScope.dhaba.length;i++){
+        if($scope.a ==$rootScope.dhaba[i].name){
+          $rootScope.dhaba[i].count +=1;
+         }
+      }
+      $http.post('/users/updaterestaurant',{city:cityname,restaurant:$rootScope.dhaba}).then(function(data){
+        console.log(data.data);
+      })
+   };
 
+})
 
+app.controller('loginController',function($scope,$http){
+ $scope.msg ="";
+ $scope.user ={name:"",email:"",password:""};
+ $scope.signuser={email:"",password:""};
+ $scope.signup = function(){
+   $http.post('/users/register',$scope.user).then(function(data){
+     $scope.msg =data.data.msg;
+   })
+ }
 })

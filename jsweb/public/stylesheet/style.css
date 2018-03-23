@@ -1,0 +1,122 @@
+/* Styles go here */
+
+
+form{
+  margin-left:10px;
+  padding:5px;
+  margin-top:10px;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#login button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+#login button:hover {
+    opacity: 0.8;
+}
+
+
+.imgcontainer {
+    text-align: center;
+    margin: 10px 0 10px 0;
+}
+
+img.avatar {
+    width: 10%;
+    border-radius: 50%;
+}
+.x{
+  cursor:pointer;
+}
+
+#create{
+width:50%;
+margin-left:auto;
+margin-right:auto
+
+}
+#signup input[type=text], input[type=password] {
+     width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+#important{
+  color:red;
+}
+
+/* Set a style for all buttons */
+#signup button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+#myForm select{
+  margin-left:auto;
+  margin-right:auto;
+  width:40%;
+  border-radius:10px;
+  color:black;
+}
+#div{
+  margin-top:10px;
+}
+
+.a{
+
+  font-size: 20px;}
+  h2{
+  color:Blue
+}
+
+h3{
+  margin-left:20px;
+}
+
+nav{
+  height:100px;
+  font-size: 30px;
+}
+
+.navbar-header a{
+
+  font-size: 30px;
+
+}
+nav{
+  padding:10px
+}
+.cont{
+  background-color:gray;
+  height:400px;
+  opacity:0.1
+
+}
+.a{
+  text-align:center;
+margin-left:40px;
+
+}
+.list-group-item{
+  font-size:30px;}

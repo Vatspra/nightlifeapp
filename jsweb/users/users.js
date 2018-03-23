@@ -6,6 +6,7 @@ var config = require('../config/database')
 //var app= express();
 const router = express.Router();
 var User = require('../models/user');
+var Restaurant = require('../models/restaurants');
 var passport = require('passport');
 var jwt = require('jsonwebtoken');
 
@@ -14,32 +15,38 @@ var jwt = require('jsonwebtoken');
 
 router.post('/register',function(req,res,next){
   console.log(req.body.name);
-
-  var newUser = new User({
-    name:req.body.username,
-    email:req.body.email,
-    username:req.body.username,
-    password:req.body.password
-  });
-
-
-  User.addUser(newUser,function(err,user){
-   if(err){
-     res.json({success:false,msg:"failed to register"});
-      }
-   else{
-     res.json({success:true,msg:"new user created"});
+    User.findOne({email:req.body.email},function(err,user){
+     if(err){
+       console.log(err);
      }
-   })
+     if(user){
+       res.json({success:false,msg:"this email is already registered"});
+     }
+     else{
+       var newUser = new User({
+         name:req.body.name,
+         email:req.body.email,
+         password:req.body.password,
+         username:req.body.username
+       });
+       User.addUser(newUser,function(err,user){
+        if(err){
+          res.json({success:false,msg:"failed to register"});
+           }
+        else{
+          res.json({success:true,msg:"new user created"});
+          }
+        })
+     }
+
+    })
+
  })
 
-
 router.post('/authenticate',function(req,res,next){
-
-  var username = req.body.username;
+  var username = req.body.email;
   var password = req.body.password;
-  console.log('user name is '+username);
-
+  //console.log('user name is '+email);
 
   User.getUserByUsername(username,function(err,user){
   if(err) throw err;
@@ -50,16 +57,16 @@ router.post('/authenticate',function(req,res,next){
   User.comparePassword(password,user.password,function(err,isMatch){
   if(err) throw err;
   if(isMatch){
-console.log('yes matched');
+   console.log('yes matched');
     const token = jwt.sign(user.toJSON(),config.secret,{
       expiresIn :604800
     });
+    console.log(token)
     res.json({success:true,
-              token:'JWT '+token,
+              token:'Bearer '+token,
                user:{
                  id:user._id,
                  name:user.name,
-                 username:user.username,
                  email:user.email
                }
              })
@@ -86,9 +93,56 @@ router.get('/applicationDetail',passport.authenticate('jwt', { session: false })
     msg:"successfull"
   });
 
-
 })
-router.get('/hello',function(req,res){
+
+
+router.post('/addrestaurant',function(req,res,next){
+  var city = req.body.city;
+  var restaurants = req.body.restaurant;
+  //find if city name already exists in the db;
+ Restaurant.findOne({cityName:city},function(err,rest){
+    if(err){
+      console.log(err)
+    }
+
+    if(rest){
+      console.log("this city already exists")
+      res.json(rest);
+    }
+    else{
+      console.log("this city is not exists")
+      //this city is not in our database save this to database
+       new Restaurant({cityName:city,restaurant:restaurants}).save(function(err,rest){
+        if(err){
+          console.log(err)
+        }
+        else{
+          console.log("hi")
+          console.log('data is saved',rest)
+           res.json(rest);
+        }
+      })
+    }
+  })
+})
+
+router.post('/updaterestaurant',function(req,res){
+  var city = req.body.city;
+  var restaurants = req.body.restaurant;
+  console.log('hi',city);
+
+  Restaurant.findOneAndUpdate({cityName: city}, {$set:{restaurant:restaurants}}, {new: true}, function(err, rest){
+      if(err){
+          console.log("Something wrong when updating data!");
+      }
+
+      console.log("updated");
+      console.log(rest.cityName)
+      res.json(rest);
+  });
+});
+
+/*router.get('/hello',function(req,res){
   res.json({msg:"hello"});
 })
  /*router.get('/validation',function(req,res,next){

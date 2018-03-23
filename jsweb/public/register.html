@@ -1,0 +1,23 @@
+<h2 class="text-center">Signup Form</h2>
+
+<h2 ng-show="msg" class="a btn btn-danger important text-center">
+     {{msg}}
+   </h2>
+<form  id="signup" ng-submit="signup()">
+  <div class="container">
+
+     <label><b>Your name</b></label>
+    <input type="text" placeholder="your Name" name="username"required ng-model="user.username">
+
+    <label><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email"required ng-model="user.email">
+
+    <label><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" ng-model="user.password" required>
+
+
+    <div class="clearfix">
+      <button type="submit" class="btn">Sign Up</button>
+    </div>
+  </div>
+</form>
