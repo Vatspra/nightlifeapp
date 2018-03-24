@@ -5,6 +5,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+  <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
+  <script type="text/javascript" src='https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js'></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel ="stylesheet" href="./stylesheet/style.css">
   </head>
@@ -31,10 +33,13 @@
    </div>
  </div>
  </nav>
+
+ <div ng-show="showSearchBar">
  <form ng-submit ="search()" ng-controller="mainController">
      <input type="text" ng-model="city" >
      <button type="submit" class="btn">search</button>
    </form>
+ </div>
  <div ng-view>
 
 </div>

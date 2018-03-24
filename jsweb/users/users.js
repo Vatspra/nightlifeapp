@@ -66,8 +66,8 @@ router.post('/authenticate',function(req,res,next){
               token:'Bearer '+token,
                user:{
                  id:user._id,
-                 name:user.name,
-                 email:user.email
+                 //name:user.name,
+                 //email:user.email
                }
              })
           }

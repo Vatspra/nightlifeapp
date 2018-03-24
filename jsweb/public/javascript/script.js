@@ -1,8 +1,21 @@
 // Code goes here
 
-var app = angular.module('myApp',["ngRoute"]).run(function($rootScope) {
+var app = angular.module('myApp',["ngRoute","ngStorage","ui.bootstrap"]).run(function($rootScope,$localStorage,$location) {
   $rootScope.dhaba =[];
-  $rootScope.authenticated =false;
+  $rootScope.authenticated = false;
+  $rootScope.showSearchBar = false;
+
+  $rootScope.logout = function(){
+    alert('clicked');
+    $localStorage.user  = {};
+    $rootScope.authenticated =false;
+    $rootScope.dhaba = [];
+    $location.path('/');
+  }
+  if($localStorage.user.success){
+  $rootScope.authenticated =true;
+  //console.log("hi i run")
+    }
   });
 app.config(function($routeProvider){
     $routeProvider
@@ -20,11 +33,13 @@ app.config(function($routeProvider){
        })
 })
 var cityname ="";
-app.controller('mainController',function($scope,$http,$location,$rootScope){
+app.controller('mainController',function($scope,$http,$location,$rootScope,$localStorage){
+  $rootScope.showSearchBar = true
+  console.log($localStorage);
   $scope.city ="";
   $scope.search = function(){
-    cityname = $scope.city;
-    alert(cityname);
+  cityname = $scope.city;
+  //alert(cityname);
   $rootScope.dhaba =[];
   var rest =[];
   var a = {name:"",img:"",count:0};
@@ -51,14 +66,13 @@ app.controller('mainController',function($scope,$http,$location,$rootScope){
   var restuDetail ={city :$scope.city,restaurant:rest}
   $http.post('/users/addrestaurant', restuDetail).then(function(data){
     $rootScope.dhaba =data.data.restaurant;
-
     console.log(data);
-
    })
   })
 
  }
  $scope.going = function(element) {
+    if($rootScope.authenticated){
       $scope.a = element.currentTarget.value;
       for(var i =0;i<$rootScope.dhaba.length;i++){
         if($scope.a ==$rootScope.dhaba[i].name){
@@ -66,19 +80,42 @@ app.controller('mainController',function($scope,$http,$location,$rootScope){
          }
       }
       $http.post('/users/updaterestaurant',{city:cityname,restaurant:$rootScope.dhaba}).then(function(data){
-        console.log(data.data);
+        console.log('updated',data.data);
       })
+    }
+    else{
+      $rootScope.showSearchBar = false;
+       $location.path('/login');
+        $rootScope.msg = "you have to login to take this action"
+     }
    };
 
 })
 
-app.controller('loginController',function($scope,$http){
- $scope.msg ="";
+app.controller('loginController',function($scope,$http,$rootScope,$localStorage,$location){
+ //$rootScope.msg ="";
+ $rootScope.showSearchBar = false;
  $scope.user ={name:"",email:"",password:""};
  $scope.signuser={email:"",password:""};
  $scope.signup = function(){
    $http.post('/users/register',$scope.user).then(function(data){
-     $scope.msg =data.data.msg;
+     $rootScope.msg =data.data.msg;
    })
  }
+ $scope.login = function(){
+   $rootScope.msg="";
+     $http.post('/users/authenticate',$scope.signuser).then(function(data){
+      if(data.data.success){
+        $localStorage.user  = data.data;
+        $rootScope.authenticated=true;
+        console.log($rootScope.dhaba);
+        $rootScope.showSearchBar = true
+        $location.path('/');
+      }
+      $rootScope.msg = data.data.msg;
+       //console.log($localStorage.user);
+     })
+ }
+
+
 })
