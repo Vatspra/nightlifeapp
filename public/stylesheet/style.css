@@ -31,15 +31,7 @@ input[type=text], input[type=password] {
 }
 
 
-.imgcontainer {
-    text-align: center;
-    margin: 10px 0 10px 0;
-}
 
-img.avatar {
-    width: 10%;
-    border-radius: 50%;
-}
 .x{
   cursor:pointer;
 }
@@ -115,8 +107,29 @@ nav{
 }
 .a{
   text-align:center;
-margin-left:40px;
+  margin-left:40px;
 
 }
 .list-group-item{
   font-size:30px;}
+
+  body{
+    background-color:pink;
+  }
+#imgDiv{
+  margin-left:20px;
+  padding:10px;
+}
+
+.img{
+  height:100px;
+  width:100px
+}
+#name{
+  margin:20px;
+  font-size:20px;
+}
+#div{
+  display:inline-block;
+  margin:10px;
+}

@@ -1,0 +1,11 @@
+
+
+
+<div ng-repeat="t in dhaba track by $index" id="imgDiv">
+  <div>
+    <img ng-src="{{t.img}}" class="img">
+      <label id="name">{{t.name}}</label>
+      
+     <button name="subject" ng-click ="going($event)" value={{t.name}} class="btn btn-default">{{t.count}} going</button>
+  </div>
+</div>

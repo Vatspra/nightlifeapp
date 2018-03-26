@@ -27,7 +27,7 @@ router.post('/register',function(req,res,next){
          name:req.body.name,
          email:req.body.email,
          password:req.body.password,
-         username:req.body.username
+
        });
        User.addUser(newUser,function(err,user){
         if(err){
@@ -87,15 +87,6 @@ router.get('/profile',passport.authenticate('jwt', { session: false }),function(
    user:req.user});
  });
 
-router.get('/applicationDetail',passport.authenticate('jwt', { session: false }),function(req,res,next){
-  res.json({
-    user:req.user,
-    msg:"successfull"
-  });
-
-})
-
-
 router.post('/addrestaurant',function(req,res,next){
   var city = req.body.city;
   var restaurants = req.body.restaurant;
@@ -126,6 +117,78 @@ router.post('/addrestaurant',function(req,res,next){
   })
 })
 
+
+router.post('/updateuser',function(req,res){
+  var yes = false
+  console.log(req.body);
+  User.findById(req.body.id, function (err, user){
+    if(err){
+      console.log(err)
+    }
+    else{
+      for(var i=0;i<user.restaurant.length;i++){
+        if(user.restaurant[i]==req.body.restaurant){
+          //console.log("yes   ")
+            yes = true;
+            console.log(yes);
+        }
+      }
+      if(yes){
+        console.log("i m sending this data")
+          res.json({success:false,msg:"this action is already registerd"});
+      }
+      console.log(yes);
+      if(yes==false){
+        console.log("i am not sending")
+      User.findByIdAndUpdate(user._id,{
+        "$push": { "restaurant": req.body.restaurant }},{ "new": true, "upsert": true },
+        function(err,users){
+          if(err){
+            console.log(err)
+          }
+          else{
+            console.log(users)
+            res.json({success:true})
+          }
+
+    } )}
+    }
+  // doc is a Document
+})
+
+})
+
+router.post('/deleteRestaurant',function(req,res){
+  var arr =[];
+  User.findById(req.body.id,function(err,user){
+    if(err){
+      throw err
+    }
+    else{
+      for(var i=0;i<user.restaurant.length;i++){
+        if(user.restaurant[i]!=req.body.restaurant){
+          arr.push(user.restaurant[i]);
+        }
+      }
+        User.findOneAndUpdate({_id: user._id}, {$set:{restaurant:arr}}, {new: true}, function(err, user){
+          if(err){
+            console.log(err)
+          }
+          if(!user){
+            res.json({success:false})
+          }
+          else{
+            console.log(user);
+            res.json({succes:true})
+          }
+
+        })
+    }
+  })
+
+
+})
+
 router.post('/updaterestaurant',function(req,res){
   var city = req.body.city;
   var restaurants = req.body.restaurant;
@@ -135,7 +198,6 @@ router.post('/updaterestaurant',function(req,res){
       if(err){
           console.log("Something wrong when updating data!");
       }
-
       console.log("updated");
       console.log(rest.cityName)
       res.json(rest);

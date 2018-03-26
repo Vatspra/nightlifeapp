@@ -10,9 +10,6 @@ var UserSchema = mongoose.Schema({
   name:{
     type:String
   },
-  username:{
-    type:String
-  },
   email:{
     type:String,
     required:true
@@ -20,45 +17,12 @@ var UserSchema = mongoose.Schema({
   password:{
     type:String,
     required:true
+  },
+  restaurant:{
+    type:Array
   }
 })
 
-var ApplicationSchema = mongoose.Schema({
-
-  user_id:{
-    type:String,
-    required:true
-  },
-  name:{
-    type:String,
-    required:true
-  },
-  appName:{
-    type:String,
-    required:true
-  },
-  email:{
-    type:String,
-    required:true
-  },
-  mobile:{
-    type:Number,
-    required:true
-  },
-  status:{
-    type:String,
-    default:'pending'
-  },
-  aadhar:{
-    type:Number,
-    required:true
-  },
-  time: { type: Number, default: function(){return new Date().getTime()}},
-     departmet:{
-       type:String,
-       required:true
-    }
-})
 
 var User = module.exports = mongoose.model('User',UserSchema);
 module.exports.getUserById = function(id,callback){
